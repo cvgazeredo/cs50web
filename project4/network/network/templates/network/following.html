@@ -1,0 +1,24 @@
+{% extends "network/layout.html" %}
+
+
+{% block body %}
+<div class="container text-center mb-5">
+    <div class="row align-items-start">
+      <div class="col">
+        <h5>{{ followers.count }}</h5>
+        <a href="{% url 'follower' user=user %}" class="badge badge-pill badge-light"><h5>Followers</h5></a>
+      </div>
+      <div class="col">
+        <h5>{{ followings.count }}</h5>
+        <a href="{% url 'following' user=user %}" class="badge badge-pill badge-light"><h5>Following</h5></a>
+      </div>
+    </div>
+</div>
+<ul class="list-group">
+    <li class="list-group-item"><b>Following</b></li>
+    {% for following in followings %}
+    <a href="{% url 'profile' id=following.following.id %}" class="list-group-item list-group-item-action list-group-item-light">@{{ following.following }}</a>
+    {% endfor %}
+  </ul>
+    
+{% endblock %}

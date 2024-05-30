@@ -1,0 +1,16 @@
+.unliked{
+    color: grey;
+}
+
+.liked{
+    color: red;
+}
+
+.like_btn:hover {
+    font-size: 110%;
+    cursor: pointer;
+
+}
+
+
+

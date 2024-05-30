@@ -1,0 +1,75 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+<script src="../../static/network/network.js"></script>
+<div class="container text-center mb-5">
+    <div class="row align-items-start">
+      <div class="col">
+        <div class="container text-center mb-5">
+            <div class="row align-items-start">
+              <div class="col">
+                <h4>@<b>{{ user_id }}</b></h4>
+                {% if user.is_authenticated %}
+                    {% if sameUser == False %}
+                        {% if isFollowing == True %}
+                        <a href="unfollow_button/{{ id }}/{{ user_id }}" class="badge badge-primary"><h6>Unfollow</h6></a>
+                        {% else %}
+                        <a href="follow_button/{{ id }}/{{ user_id }}" class="badge badge-primary"><h6>Follow</h6></a>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+              </div>
+              <div class="col">
+                <h5>{{ followers.count }}</h5>
+                <a href="#" class="badge badge-pill badge-light"><h5>Followers</h5></a>
+              </div>
+              <div class="col">
+                <h5>{{ followings.count }}</h5>
+                <a href="#" class="badge badge-pill badge-light"><h5>Following</h5></a>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+<h5>Posts:</h5>
+{% for post in posts %}
+{% csrf_token %}
+  <div class="card mb-3">
+    <div class="card-body ">
+      <div class="card-header">@<b>{{ post.user}}:</b></div>
+      <div class="card-body">"{{ post.text }}"</div>
+      {% if post.isLiked %}
+      <p><span onclick='handle_unlike(this.id, "{{ post.id }}")' id='unlike_btn_{{ post.id }}'
+          class="like_btn liked">&hearts;</span>
+      <div id="count_unlike_{{ post.id }}">{{ post.likesCount }}</div>likes</p>
+      {% else %}
+      <p>
+        <span onclick='handle_like(this.id, "{{ post.id }}")' id='like_btn_{{ post.id }}'
+          class="like_btn unliked">&hearts;</span>
+      <div id="count_like_{{ post.id }}">{{ post.likesCount }}</div>likes</p>
+      {% endif %}
+      <div class="blockquote-footer">{{ post.date }}
+        {% if user == post.user%}
+        <a href="edit_post/{{ post.id }}/{{ post.user }}">Edit Post</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center ">
+      {% if posts.has_previous %}
+      <li class="page-item"><a class="page-link badge-light" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+      {% endif %}
+      {% if posts.has_next %}
+      <li class="page-item"><a class="page-link badge-light" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+      {% endif %}
+    </ul>
+  </nav>  
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/network.js' %}"></script>
+{% endblock %}

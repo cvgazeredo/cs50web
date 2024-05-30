@@ -1,0 +1,64 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Listing: {{ listing.title }}</h2>
+    <br>
+    <div class="card">
+        <div class="card-body">
+            <div class="col-sm-6">
+                {% if isInUserWatchList == True %}
+                    <a href="remove_watchlist/{{ listing.id }}" class="card-link">Remove from my Watchlist</a>
+                {% else %}
+                    <a href="watchlist/{{ listing.id }}" class="card-link">Add to my Watchlist</a>
+                {% endif %}  
+                <br><br>
+                {% if isUserOfListing == True %}
+                    {% if listing.status == True %}
+                        <a href="close_auction/{{ listing.id }}" class="card-link">Close Auction</a>
+                    {% endif %}
+                {% endif %}
+      <ul class="list-inline">
+        <li class="list-inline-item"><img src="{{ listing.image_url }}" class="img-thumbnail" alt="..."></li>
+        <br><br>
+        <li class="list-inline-item"><b>Description:</b> {{ listing.description }}
+            <br><br>
+            <b>Comments:</b> 
+            <br><br>
+            {% for comment in comments %}
+                <h6>- "{{ comment.comment }}"</h6>
+            {% endfor %}
+            <br>
+            {% if user.is_authenticated %}
+            <form action="{% url 'comment' listing_id=listing.id %}" method="POST">
+                {% csrf_token %} 
+                <br>
+                <b>Make a comment:</b><input id="comment" name="comment" placeholder="Comment"><input type="submit" value="Submit">
+                <br><br><br>  
+            </form>          
+            {% endif %}
+
+            {% if listing.status == True %}
+            <form action="{% url 'place_bid' listing_id=listing.id %}" method="POST">
+                {% csrf_token %} 
+                <br>
+                <b>Current Price: ${{ bids }}</b>
+                <br><br>
+                <label>Create a new bid:</label>
+                <input id="bid" name="bid" placeholder="${{ bids }}">
+                <br>
+                <input type="submit" value="Submit">
+            </form>
+            {% else %}
+                {% if isUserOfListing == True %}
+                <h5>You sold this item for: ${{ bids }}</h5>
+                {% elif  WinnerUser == True %}
+                    <h5>You are the winner!</h5>
+                    <h5>That listing was sold!</h5>
+                {% else %}
+                <h5>Auction is finished! Sold for: ${{ bids }}</h5>
+                {% endif %}
+            {% endif %}
+
+        </li>
+      </ul>
+{% endblock %}

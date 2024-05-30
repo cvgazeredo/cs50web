@@ -1,0 +1,27 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+<main>
+    <div class="container text-center mb-5">
+        <div class="row align-items-start">
+            <div class="col">
+                <h4>Hello, @<b>{{ user }}</b></h4>
+            </div>
+        </div>
+    </div>
+    <h5>Edit Post:</h5>
+    <div class="card">
+        <div class="card-body" id="compose-post">
+            <form action="edit_post" method="POST" id="compose-post">
+                {% csrf_token %}
+                <!-- <h5 class="card-title">Crete New Post</h5> -->
+                <p class="card-text"><textarea class="form-control" id="text"
+                        name="text">{{ post_to_edit.text }}</textarea></p>
+                <button class="btn btn-outline-secondary" type="submit">Submit!</button>
+            </form>
+        </div>
+    </div>
+
+
+    {% endblock %}
